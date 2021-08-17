@@ -1,0 +1,55 @@
+<div class="form-container container">
+    <div class="form-type-container">
+        <div (click)="signupFormSelected()" class="signup-container">
+            <h2>Sign Up</h2>
+        </div>
+        <div (click)="loginFormSelected()" class="login-container">
+            <h2>Log In</h2>
+        </div>
+    </div>
+    <form [formGroup]="signupForm" class="container" *ngIf="form_type === 'signup'">
+        <div class="form-controls-container">
+            <div class="form-group">
+              <label for="first-name">First Name</label>
+              <input type="text" formControlName="first_name" class="form-control" id="first-name" aria-describedby="first-name" placeholder="Enter Your First Name">
+            </div>
+            <div class="form-group">
+              <label for="last-name">Last Name</label>
+              <input type="text" formControlName="last_name" class="form-control" id="last-name" aria-describedby="last-name" placeholder="Enter Your Last Name">
+            </div>
+            <div class="form-group">
+              <label for="exampleInputEmail1">Email address</label>
+              <input type="email" formControlName="email" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" placeholder="Enter email">
+              <small id="emailHelp" class="form-text text-muted">We'll never share your email with anyone else.</small>
+            </div>
+            <div class="form-group">
+              <label for="exampleInputPassword1">Password</label>
+              <input type="password" formControlName="password" class="form-control" id="exampleInputPassword1" placeholder="Password">
+            </div>
+            <div class="form-check">
+              <input type="checkbox" class="form-check-input" id="exampleCheck1">
+              <label class="form-check-label" for="exampleCheck1">Check me out</label>
+            </div>
+            <p>{{ error }}</p>
+            <div class="btn-container">
+                <button class="btn btn-primary" (click)="signup()">Sign Up</button>
+            </div>
+        </div>
+    </form>
+    <form [formGroup]="loginForm" class="container" *ngIf="form_type === 'login'">
+        <div class="form-controls-container">
+            <div class="form-group">
+              <label for="exampleInputEmail1">Email address</label>
+              <input type="email" formControlName="email" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" placeholder="Enter email">
+            </div>
+            <div class="form-group">
+              <label for="exampleInputPassword1">Password</label>
+              <input type="password" formControlName="password" class="form-control" id="exampleInputPassword1" placeholder="Password">
+            </div>
+            <p>{{ error }}</p>
+            <div class="btn-container">
+                <button class="btn btn-primary" (click)="login()">Log In</button>
+            </div>
+        </div>
+    </form>
+</div>

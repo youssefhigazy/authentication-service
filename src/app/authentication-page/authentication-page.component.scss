@@ -1,0 +1,63 @@
+.form-container{
+    width: 100%;
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    color: #fff;
+    .form-type-container{
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        justify-content: space-around;
+        color: #000;
+        width: 50%;
+        text-align: center;
+        cursor: pointer;
+        .signup-container{
+            width: 50%;
+            padding: 10px;
+        }
+        .login-container{
+            width: 50%;
+            padding: 10px;
+        }
+        .selected-form{
+            background-color: #022d50;
+            color: #fff;
+        }
+    }
+    form{
+        background-color: #022d50;
+        width: 50%;
+        height: 50%;
+        border-bottom: 0px 5px 0px 5px;
+        .form-controls-container{
+            margin-top: 5%;
+            .btn-container{
+                display: flex;
+                flex-direction: row;
+                align-items: center;
+                justify-content: space-around;
+            }
+            input{
+                margin-bottom: 1%;
+            }
+            button{
+                margin: auto;
+            }
+        }
+    }
+}
+
+@media screen and (max-width: 768px) {
+    .form-container{
+        form{
+            width: 90%;
+        }
+        .form-type-container{
+            width: 90%;
+        }
+    }
+}
