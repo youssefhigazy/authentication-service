@@ -1,0 +1,4 @@
+<form [formGroup]="stockForm" class="container">
+    <input type="text" oninput="this.value = this.value.toUpperCase()" class="form-control" style="text-transform: uppercase;" formControlName="stock_symbol" style="width: 50%;" placeholder="Enter Stock Symbol">
+    <button (click)="addStock()" class="btn btn-success add-stock-btn">Add Stock</button>
+</form>
