@@ -3,9 +3,12 @@
         <h1 [routerLink]="['/', 'home']">Your Authentication Service</h1>
     </div>
     <div class="sub-tabs">
-        <ul>
+        <ul *ngIf="!loggedIn">
             <li [routerLink]="['/', 'auth']">Log In</li>
             <button [routerLink]="['/', 'auth']" class="btn btn-light">Sign Up</button>
         </ul>
+        <div *ngIf="loggedIn" class="sign-out-btn-container">
+            <button (click)="signOut()" class="btn btn-light">Sign Out</button>
+        </div>
     </div>
 </div>
