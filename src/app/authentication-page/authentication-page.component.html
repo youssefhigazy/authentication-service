@@ -26,13 +26,13 @@
               <label for="exampleInputPassword1">Password</label>
               <input type="password" formControlName="password" class="form-control" id="exampleInputPassword1" placeholder="Password">
             </div>
-            <div class="form-check">
-              <input type="checkbox" class="form-check-input" id="exampleCheck1">
-              <label class="form-check-label" for="exampleCheck1">Check me out</label>
-            </div>
             <p>{{ error }}</p>
             <div class="btn-container">
                 <button class="btn btn-primary" (click)="signup()">Sign Up</button>
+            </div>
+            <div (click)="signupWithGoogleAccount()" class="google-account-signup-container">
+                <!-- <i>Sign In With Google</i> -->
+                <img src="../../assets/images/btn_google_signin_light_normal_web.png" alt="Sign In With Google icon">
             </div>
         </div>
     </form>
@@ -49,6 +49,13 @@
             <p>{{ error }}</p>
             <div class="btn-container">
                 <button class="btn btn-primary" (click)="login()">Log In</button>
+            </div>
+            <div (click)="signupWithGoogleAccount()" class="google-account-signup-container">
+              <!-- <i>Sign In With Google</i> -->
+              <img src="../../assets/images/btn_google_signin_light_normal_web.png" alt="Sign In With Google icon">
+            </div>
+            <div [routerLink]="['/', 'forget-password']" class="forget-password-container">
+              <p>Forget Password?</p>
             </div>
         </div>
     </form>

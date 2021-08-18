@@ -3,7 +3,7 @@ import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { AngularFireAuth } from "@angular/fire/auth";
 import { AngularFirestore, AngularFirestoreCollection, AngularFirestoreDocument } from '@angular/fire/firestore';
 import { Observable } from 'rxjs';
-import * as firebase from 'firebase';
+import firebase from 'firebase/app';
 
 @Component({
   selector: 'app-authentication-page',
@@ -90,6 +90,7 @@ export class AuthenticationPageComponent implements OnInit {
       let currentUser = userCredential.user;
       this.currentUser = currentUser;
       this.currentUserEmail = userCredential.user.email;
+      window.location.replace("/");
     })
     .catch((error) => {
       this.error = error.message;
@@ -105,6 +106,7 @@ export class AuthenticationPageComponent implements OnInit {
       .then((userCredential) => {
         this.currentUser = userCredential.user;
         console.log(`${this.currentUser.email} was logged in successfully!`); 
+        window.location.replace("/");
       })
       .catch((error) => {
         this.error = error.message;
@@ -112,19 +114,47 @@ export class AuthenticationPageComponent implements OnInit {
     })
   }
 
-  injectUserIntoDatabase(): void{
+  injectUserIntoDatabase(first_name=this.signupForm.get("first_name").value, last_name=this.signupForm.get("last_name").value): void{
     this.userDatabase = this.database.doc(this.currentUserEmail);
 
     this.userDatabase.set({
       username: this.currentUserEmail,
-      first_name: this.signupForm.get("first_name").value,
-      last_name: this.signupForm.get("last_name").value,
+      first_name: first_name,
+      last_name: last_name,
       stocks: [] // Specially added for the stocks application, could be removed for other purposes.
     }).catch((error) => {
       return error;
     });
     
     console.log("The user was registered in the Database successfully!");
+  }
+
+  signupWithGoogleAccount(): void{
+    const provider = new firebase.auth.GoogleAuthProvider();
+
+    firebase.auth()
+    .signInWithPopup(provider)
+    .then((result) => {
+      let credential = result.credential;
+      let user = result.user;
+      this.currentUser = user;
+      this.currentUserEmail = user.email;
+      window.location.replace("/");
+    }).catch((error) => {
+      let errorCode = error.code;
+      let errorMessage = error.message;
+      let email = error.email;
+      let credential = error.credential;
+      this.error = errorMessage;
+      console.log(error);
+    })
+
+    let currentUSerNameArray = (this.currentUser.displayName as String).split(" ");
+    this.injectUserIntoDatabase(currentUSerNameArray[0], currentUSerNameArray[1]);
+  }
+
+  forgetPassowrd(){
+    this.authService.sendPasswordResetEmail("")
   }
 
   getUserFirstName(){

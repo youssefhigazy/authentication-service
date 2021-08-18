@@ -6,6 +6,7 @@
     align-items: center;
     justify-content: center;
     color: #fff;
+    margin-top: 50px;
     .form-type-container{
         display: flex;
         flex-direction: row;
@@ -31,10 +32,22 @@
     form{
         background-color: #4e5153;
         width: 50%;
-        height: 50%;
+        padding: 25px;
         border-bottom: 0px 5px 0px 5px;
         .form-controls-container{
             margin-top: 5%;
+            .forget-password-container{
+                text-align: center;
+                cursor: pointer;
+            }
+            .google-account-signup-container{
+                margin-top: 15px;
+                display: flex;
+                flex-direction: row;
+                align-items: center;
+                justify-content: center;
+                cursor: pointer;
+            }
             .btn-container{
                 display: flex;
                 flex-direction: row;
