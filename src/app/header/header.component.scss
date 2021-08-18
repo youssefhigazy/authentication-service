@@ -1,0 +1,31 @@
+.header-container{
+    display: flex;
+    flex-direction: row;
+    justify-content: space-around;
+    align-items: center;
+    flex-wrap: wrap;
+    color: #fff;
+    background-color: #4e5153 !important;
+    .title-container{
+        margin-left: 20px;
+        cursor: pointer;
+        h1{
+            text-transform: uppercase;
+            font-weight: 700;
+        }
+    }
+    .sub-tabs{
+        ul{
+            margin-bottom: 0px;
+            list-style: none;
+            display: flex;
+            flex-direction: row;
+            justify-content: space-around;
+            align-items: center;
+            li{
+                cursor: pointer;
+                padding: 20px;
+            }
+        }
+    }
+}

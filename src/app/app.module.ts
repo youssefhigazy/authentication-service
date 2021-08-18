@@ -8,12 +8,14 @@ import { AppComponent } from './app.component';
 import { AuthenticationPageComponent } from './authentication-page/authentication-page.component';
 import { firebaseConfig } from './firebaseconfig';
 import { HomePageComponent } from './home-page/home-page.component';
+import { HeaderComponent } from './header/header.component';
 
 @NgModule({
   declarations: [
     AppComponent,
     AuthenticationPageComponent,
-    HomePageComponent
+    HomePageComponent,
+    HeaderComponent
   ],
   imports: [
     ReactiveFormsModule,
