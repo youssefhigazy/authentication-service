@@ -9,13 +9,15 @@ import { AuthenticationPageComponent } from './authentication-page/authenticatio
 import { firebaseConfig } from './firebaseconfig';
 import { HomePageComponent } from './home-page/home-page.component';
 import { HeaderComponent } from './header/header.component';
+import { ForgetPasswordFormComponent } from './forget-password-form/forget-password-form.component';
 
 @NgModule({
   declarations: [
     AppComponent,
     AuthenticationPageComponent,
     HomePageComponent,
-    HeaderComponent
+    HeaderComponent,
+    ForgetPasswordFormComponent
   ],
   imports: [
     ReactiveFormsModule,
