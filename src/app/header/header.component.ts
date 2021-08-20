@@ -1,7 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { AngularFireAuth } from '@angular/fire/auth';
-import { AngularFirestore, AngularFirestoreCollection } from '@angular/fire/firestore';
+import { AngularFirestore, AngularFirestoreCollection, AngularFirestoreDocument } from '@angular/fire/firestore';
 import { Observable } from 'rxjs';
+import { UserService } from '../user-service/user.service';
 
 @Component({
   selector: 'app-header',
@@ -9,35 +10,36 @@ import { Observable } from 'rxjs';
   styleUrls: ['./header.component.scss']
 })
 export class HeaderComponent implements OnInit {
-  users: Observable<any>;
-  database: AngularFirestoreCollection<any>;
   currentUser: any;
-  currentUserEmail: any;
   loggedIn: boolean;
 
-  constructor(private authService: AngularFireAuth, private firestore: AngularFirestore) {
-    this.users = this.firestore.collection("users_info").valueChanges();
-    this.database = this.firestore.collection("users_info");
-    this.authService.onAuthStateChanged((user) => this.currentUser = user);
+  constructor(private userService: UserService) {
+    this.userService.settingCurrentUserProperDB();
   }
 
-  ngOnInit(): void {
-    this.loggedIn = false;
-    this.authService.onAuthStateChanged((user) => {
-      this.currentUser = user;
-      this.currentUserEmail = user.email;
-      console.log(this.currentUser.email);
-      this.loggedIn = true;
-    });
+  ngOnInit(): void{
+    // Setting up the initial configuration that will take place once the user open the page
+    this.userService.initialUserConfigurationOnLoading();
+    
+    setTimeout(() => {
+      this.loggedIn = this.userService.loggedIn;
+
+      if (!this.loggedIn) return;
+      // Setting up the current user object to hold the current user's information
+      this.currentUser = {};
+      // Pulling the current user's information from the database
+      // It will be done after 1000 ms from the page loading to ensure the proper respnse
+      this.userService.database.doc(this.userService.currentUserEmail).get().subscribe(res => {
+        this.currentUser.currentUser = this.userService.currentUser;
+        this.currentUser.first_name = res.data().first_name; 
+        this.currentUser.last_name = res.data().last_name; 
+        this.currentUser.email = this.userService.currentUserEmail;
+      });
+    }, 1000)
+
   }
 
   signOut(){
-    this.authService.signOut().then(() => {
-      console.log("Signed Out!");
-      window.location.reload();
-    }).catch((error) => {
-      console.log(error);
-    })
+    this.userService.signOut();
   }
-
 }

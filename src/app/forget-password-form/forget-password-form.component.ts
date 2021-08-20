@@ -3,6 +3,7 @@ import { AngularFireAuth } from '@angular/fire/auth';
 import { AngularFirestore, AngularFirestoreCollection } from '@angular/fire/firestore';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { Observable } from 'rxjs';
+import { UserService } from '../user-service/user.service';
 
 @Component({
   selector: 'app-forget-password-form',
@@ -10,16 +11,8 @@ import { Observable } from 'rxjs';
   styleUrls: ['./forget-password-form.component.scss']
 })
 export class ForgetPasswordFormComponent implements OnInit {
-  users: Observable<any>;
-  database: AngularFirestoreCollection<any>;
-  currentUser: any;
-  currentUserEmail: any;
 
-  constructor(private authService: AngularFireAuth, private firestore: AngularFirestore) {
-    this.users = this.firestore.collection("users_info").valueChanges();
-    this.database = this.firestore.collection("users_info");
-    this.authService.onAuthStateChanged((user) => this.currentUser = user);
-  }
+  constructor(private userService: UserService) { }
 
   ngOnInit(): void {
   }
@@ -29,12 +22,6 @@ export class ForgetPasswordFormComponent implements OnInit {
   })
 
   forgetPassword(): void{
-    this.authService.sendPasswordResetEmail(this.forget_password_form.get("email").value)
-    .then(() => {
-      console.log("An email was sent to the given email address.");
-    })
-    .catch((error) => {
-      console.log(error);
-    })
+    this.userService.forgetPassword(this.forget_password_form.get("email").value);
   }
 }
