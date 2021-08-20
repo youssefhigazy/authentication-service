@@ -8,6 +8,7 @@
             <button [routerLink]="['/', 'auth']" class="btn btn-light">Sign Up</button>
         </ul>
         <div *ngIf="loggedIn" class="sign-out-btn-container">
+            <p>Hello, {{ currentUser.first_name }}!</p>
             <button (click)="signOut()" class="btn btn-light">Sign Out</button>
         </div>
     </div>
