@@ -17,6 +17,7 @@ export class UserService {
   collections: AngularFirestoreCollection<any>;
   database: AngularFirestoreCollection<any>;
   userDatabase: AngularFirestoreDocument<any>;
+  loggedIn: boolean;
   error: any;
 
   constructor(private authService: AngularFireAuth, private firestore: AngularFirestore) {
@@ -25,14 +26,35 @@ export class UserService {
     this.authService.onAuthStateChanged((user) => this.currentUser = user);
   }
 
+  async initialUserConfigurationOnLoading(): Promise<void>{
+    this.users = await this.firestore.collection("users_info").valueChanges();
+    this.database = await this.firestore.collection("users_info");
 
-  async signup(first_name: string, last_name: string, email: string, password: string): Promise<void>{
+    await this.authService.onAuthStateChanged((user) => {
+      this.currentUser = user;
+      this.currentUserEmail = user.email;
+      console.log(this.currentUser.email);
+      this.loggingStatus();
+    });
+  }
+
+  loggingStatus(): boolean{
+    if (this.currentUser) this.loggedIn = true;
+    else this.loggedIn = false;
+    console.log(this.loggedIn);
+    return this.loggedIn;
+  }
+
+  async signup(first_name: string, last_name: string, email: string, password: string, currentActiveUser: any): Promise<void>{
     await this.authService.createUserWithEmailAndPassword(email, password)
     .then((userCredential) => {
       let currentUser = userCredential.user;
       this.currentUser = currentUser;
+      currentActiveUser = currentUser;
       this.currentUserEmail = userCredential.user.email;
-      window.location.replace("/");
+      setTimeout(() => {
+        window.location.replace("/");
+      })
     })
     .catch((error) => {
       this.error = error.message;
@@ -105,7 +127,7 @@ export class UserService {
     })
   }
 
-  settingCurrentUSerProperDB(): void{
+  settingCurrentUserProperDB(): void{ 
     this.authService.onAuthStateChanged((user) => {
       this.currentUser = user;
       console.log(this.currentUser.email);
