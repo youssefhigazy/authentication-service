@@ -45,16 +45,16 @@ export class UserService {
     return this.loggedIn;
   }
 
-  async signup(first_name: string, last_name: string, email: string, password: string, currentActiveUser: any): Promise<void>{
+  async signup(first_name: string, last_name: string, email: string, password: string, currentProvidedUser: any): Promise<void>{
     await this.authService.createUserWithEmailAndPassword(email, password)
     .then((userCredential) => {
       let currentUser = userCredential.user;
       this.currentUser = currentUser;
-      currentActiveUser = currentUser;
+      currentProvidedUser = userCredential.user;
       this.currentUserEmail = userCredential.user.email;
       setTimeout(() => {
         window.location.replace("/");
-      })
+      }, 1000);
     })
     .catch((error) => {
       this.error = error.message;
@@ -63,14 +63,17 @@ export class UserService {
     await this.injectUserIntoDatabase(first_name, last_name);
   }
 
-  async login(email: string, password: string): Promise<void>{
+  async login(email: string, password: string, currentProvidedUser: any): Promise<void>{
     await this.authService.setPersistence("local")
     .then(() => {
       this.authService.signInWithEmailAndPassword(email, password)
       .then((userCredential) => {
         this.currentUser = userCredential.user;
-        console.log(`${this.currentUser.email} was logged in successfully!`); 
-        window.location.replace("/");
+        currentProvidedUser = userCredential.user;
+        console.log(`${this.currentUser.email} was logged in successfully!`);
+        setTimeout(() => {
+          window.location.replace("/");
+        }, 1000);
       })
       .catch((error) => {
         this.error = error.message;
@@ -93,7 +96,7 @@ export class UserService {
     console.log("The user was registered in the Database successfully!");
   }
 
-  signupWithGoogleAccount(): void{
+  signupWithGoogleAccount(currentProvidedUser: any): void{
     const provider = new firebase.auth.GoogleAuthProvider();
 
     firebase.auth()
@@ -101,6 +104,7 @@ export class UserService {
     .then((result) => {
       let credential = result.credential;
       let user = result.user;
+      currentProvidedUser = user;
       this.currentUser = user;
       this.currentUserEmail = user.email;
       window.location.replace("/");

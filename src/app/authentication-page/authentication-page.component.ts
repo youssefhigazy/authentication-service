@@ -4,6 +4,7 @@ import { AngularFireAuth } from "@angular/fire/auth";
 import { AngularFirestore, AngularFirestoreCollection, AngularFirestoreDocument } from '@angular/fire/firestore';
 import { Observable } from 'rxjs';
 import firebase from 'firebase/app';
+import { UserService } from '../user-service/user.service';
 
 @Component({
   selector: 'app-authentication-page',
@@ -22,7 +23,7 @@ export class AuthenticationPageComponent implements OnInit {
   userDatabase: AngularFirestoreDocument<any>;
   error: any;
 
-  constructor(private authService: AngularFireAuth, private firestore: AngularFirestore) {
+  constructor(private authService: AngularFireAuth, private firestore: AngularFirestore, private userService: UserService) {
     this.users = this.firestore.collection("users_info").valueChanges();
     this.database = this.firestore.collection("users_info");
     this.authService.onAuthStateChanged((user) => this.currentUser = user);
@@ -85,76 +86,25 @@ export class AuthenticationPageComponent implements OnInit {
   }
 
   async signup(): Promise<void>{
-    await this.authService.createUserWithEmailAndPassword(this.signupForm.get("email").value, this.signupForm.get("password").value)
-    .then((userCredential) => {
-      let currentUser = userCredential.user;
-      this.currentUser = currentUser;
-      this.currentUserEmail = userCredential.user.email;
-      window.location.replace("/");
-    })
-    .catch((error) => {
-      this.error = error.message;
-    })
-
-    await this.injectUserIntoDatabase();
+    this.userService.signup(this.signupForm.get("first_name").value,
+                            this.signupForm.get("last_name").value,
+                            this.signupForm.get("email").value,
+                            this.signupForm.get("password").value,
+                            this.currentUser);
   }
 
   async login(): Promise<void>{
-    await this.authService.setPersistence("local")
-    .then(() => {
-      this.authService.signInWithEmailAndPassword(this.loginForm.get("email").value, this.loginForm.get("password").value)
-      .then((userCredential) => {
-        this.currentUser = userCredential.user;
-        console.log(`${this.currentUser.email} was logged in successfully!`); 
-        window.location.replace("/");
-      })
-      .catch((error) => {
-        this.error = error.message;
-      })
-    })
+    this.userService.login(this.loginForm.get("email").value,
+                           this.loginForm.get("password").value,
+                           this.currentUser)
   }
 
   injectUserIntoDatabase(first_name=this.signupForm.get("first_name").value, last_name=this.signupForm.get("last_name").value): void{
-    this.userDatabase = this.database.doc(this.currentUserEmail);
-
-    this.userDatabase.set({
-      username: this.currentUserEmail,
-      first_name: first_name,
-      last_name: last_name,
-      stocks: [] // Specially added for the stocks application, could be removed for other purposes.
-    }).catch((error) => {
-      return error;
-    });
-    
-    console.log("The user was registered in the Database successfully!");
+    this.userService.injectUserIntoDatabase(first_name, last_name);
   }
 
   signupWithGoogleAccount(): void{
-    const provider = new firebase.auth.GoogleAuthProvider();
-
-    firebase.auth()
-    .signInWithPopup(provider)
-    .then((result) => {
-      let credential = result.credential;
-      let user = result.user;
-      this.currentUser = user;
-      this.currentUserEmail = user.email;
-      window.location.replace("/");
-    }).catch((error) => {
-      let errorCode = error.code;
-      let errorMessage = error.message;
-      let email = error.email;
-      let credential = error.credential;
-      this.error = errorMessage;
-      console.log(error);
-    })
-
-    let currentUSerNameArray = (this.currentUser.displayName as String).split(" ");
-    this.injectUserIntoDatabase(currentUSerNameArray[0], currentUSerNameArray[1]);
-  }
-
-  forgetPassowrd(){
-    this.authService.sendPasswordResetEmail("")
+    this.userService.signupWithGoogleAccount(this.currentUser);
   }
 
   getUserFirstName(){
